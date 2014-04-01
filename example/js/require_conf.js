@@ -6,7 +6,9 @@ require.config({
     basket: {
         excludes: ['general'],
         unique:{
-            //util: 1 //change the number after edit util.js file (it will reload and recache it)
+            // uncomment and change the num if you want to force reload this module
+            // since php make checksum the files that will be optional
+            //util: 1  
         }
     }
 });

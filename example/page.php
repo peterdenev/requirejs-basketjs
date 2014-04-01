@@ -20,19 +20,20 @@ function getJSmodulesMD5($baseDir='js'){
 <html>
     <head>
         <title>My Sample Project</title>        
-        <script type="text/javascript" src="js/basket.full.min.js"></script>         
+        <script type="text/javascript" src="js/base/basket.full.min.js"></script>         
          <script>
-            //php array to js array
+            // 1) config the path to js files
             var modules_md5 = <?php echo json_encode(getJSmodulesMD5('js')); ?>;
-            //add unique to point to the md5 of the file
-            basket.require({ url: 'js/require.js', unique:modules_md5['js/require.js'] })
-            .then(function(){
-                //NOTICE: the key is with _ (underscore) beacuse basket.js don't want clear it from localStorage when basket.clear()
-                basket.require({ url: 'js/basket-loader.js', key: 'basket_loader', unique:modules_md5['js/basket-loader.js'] })
-                .then(function(){                    
-                    basket.require({ url: 'js/require_conf.js',unique:modules_md5['js/require_conf.js'] })
-                })
-            })          
+            // 2) config the path to base js libs            
+            var init_libs = {
+                prepare: 'js/base/prepare_require.js',
+                require: 'js/base/require.js',
+                loader: 'js/base/basket-loader.js',
+                // 3) config the main (general) js for require.js in require_conf.js
+                config: 'js/require_conf.js'
+            };
+            // 3) run
+            basket.require({ url: init_libs['prepare'], unique:modules_md5[init_libs['prepare']] });                     
             // try:
             // 1) js/modules/util.js ->  uncomment "foo: bar" row
             // 2) Refresh. That's all. Enjoy :)           
