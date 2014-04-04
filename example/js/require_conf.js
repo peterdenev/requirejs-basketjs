@@ -3,6 +3,7 @@ require.config({
     paths: {       
         general: '../general',        
     },
+    // if basket.checksums is correct implemented there will be no need of this settings
     basket: {
         excludes: ['general'],
         unique:{

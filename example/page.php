@@ -23,17 +23,15 @@ function getJSmodulesMD5($baseDir='js'){
         <script type="text/javascript" src="js/base/basket.full.min.js"></script>         
          <script>
             // 1) config the path to js files
-            var modules_md5 = <?php echo json_encode(getJSmodulesMD5('js')); ?>;
-            // 2) config the path to base js libs            
-            var init_libs = {
-                prepare: 'js/base/prepare_require.js',
-                require: 'js/base/require.js',
-                loader: 'js/base/basket-loader.js',
-                // 3) config the main (general) js for require.js in require_conf.js
-                config: 'js/require_conf.js'
-            };
-            // 3) run
-            basket.require({ url: init_libs['prepare'], unique:modules_md5[init_libs['prepare']] });                     
+            basket.checksums = <?php echo json_encode(getJSmodulesMD5('js')); ?>;
+            // 2) config the path to base js libs 
+            basket.synchRequire(
+                { url:'js/base/require.js'},
+                { url:'js/base/basket-loader.js'},
+                // 3) config the main (general) js for requirejs in require_conf.js
+                { url:'js/require_conf.js'}
+            );
+                                 
             // try:
             // 1) js/modules/util.js ->  uncomment "foo: bar" row
             // 2) Refresh. That's all. Enjoy :)           

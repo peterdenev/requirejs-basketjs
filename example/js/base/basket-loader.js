@@ -18,19 +18,12 @@
      * absolute path function based on:
      * http://stackoverflow.com/questions/14780350/convert-relative-path-to-absolute-using-javascript
      */
-     var getAbsolute = function(relative, base) {
-        base = typeof base !== 'undefined' ?  base : '';
-        var stack = base.split("/"),
-            parts = relative.split("/");
-        stack.pop(); // remove current file name (or empty string)
-                     // (omit if "base" is the current folder without trailing slash)
-        for (var i=0; i<parts.length; i++) {
-            if (parts[i] == ".")
-                continue;
-            if (parts[i] == "..")
-                stack.pop();
-            else
-                stack.push(parts[i]);
+    var getAbsolute = function(relative) {        
+        var stack = [],
+            parts = relative.split("/");        
+        for (var i in parts) {
+            if (parts[i] == ".") {continue;}
+            (parts[i] == "..") ? stack.pop() : stack.push(parts[i]);
         }
         return stack.join("/");
     }
@@ -48,11 +41,11 @@
         if (config.basket && config.basket.excludes && config.basket.excludes.indexOf(moduleName) !== -1) {
             original_loader(context, moduleName, url);
         } else {            
-            var unique = (typeof modules_md5 !== 'undefined') ? modules_md5[getAbsolute(url)] : 1;
+            var b_reqire = { url: url };            
             if(config.basket && config.basket.unique && config.basket.unique.hasOwnProperty(moduleName) ){
-                unique = config.basket.unique[moduleName];
-            }
-            basket.require({ url: url,unique:unique }).then(function () {
+                b_reqire.unique = config.basket.unique[moduleName];
+            }            
+            basket.require(b_reqire).then(function () {
                 context.completeLoad(moduleName);
             }, function (error) {
                 // TODO: Support path fallback.
